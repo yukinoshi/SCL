@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <img src="" id="qrcode" alt="" />
+  <div class="status-div"></div>
+</body>
+<script>
+  const status = {
+    0: "未授权",
+    1: "已授权",
+    2: "已过期",
+    3: "已拒绝"
+  }
+  const qrcode = document.getElementById("qrcode");
+  const statusDiv = document.querySelector(".status-div");
+  let userId = null
+  statusDiv.innerText = status[0]
+  fetch('/qrcode').then(res=> res.json()).then(data => {
+    qrcode.src = data.code
+    userId = data.userId
+    let timer = setInterval(() => {
+      fetch(`/check/${userId}`).then(res => res.json()).then(data => {
+        statusDiv.innerText = status[data.status]
+        if (data.status != 0) {
+          clearInterval(timer)
+        }
+      })
+    }, 1000);
+  })
+</script>
+</html>

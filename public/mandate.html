@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    button {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <button id="btn">同意授权</button>
+  <button id="btn2">拒绝授权</button>
+  <div></div>
+</body>
+<script>
+  const btn = document.getElementById('btn')
+  const btn2 = document.getElementById('btn2')
+  const userId = new URLSearchParams(location.search).get('userId');
+  // let userId = location.search.slice(1).split('=')[1]
+  btn.onclick = () => {
+    //点击授权按钮
+    fetch(`/login/${userId}`, {
+      method: 'POST',
+    }).then(res => res.json()).then(res => {
+      alert(`授权成功`)
+      document.querySelector('div').innerText = `授权成功`
+    }).catch(err => {
+      alert(err)
+      document.querySelector('div').innerText = `拒绝授权`
+    })
+  }
+  btn2.onclick = () => {
+    //点击拒绝按钮
+    fetch(`/reject/${userId}`, {
+      method: 'POST',
+    }).then(res => res.json()).then(res => {
+      alert(`拒绝授权`)
+      document.querySelector('div').innerText = `拒绝授权`
+    }).catch(err => {
+      alert(err)
+      document.querySelector('div').innerText = `拒绝授权`
+    })
+  }        
+</script>
+
+</html>
